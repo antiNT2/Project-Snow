@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     PlayerInput playerInput;
     PlayerMotor playerMotor;
+    PlayerAttack playerAttack;
     Rigidbody2D playerRigidbody;
     Animator anim;
 
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerMotor = GetComponent<PlayerMotor>();
+        playerAttack = GetComponent<PlayerAttack>();
         playerRigidbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         DebugEnemies();
@@ -27,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) || DebugAllEnemiesAreDead())
             DebugEnemies();
         if (Input.GetKeyDown(KeyCode.Mouse2))
             Debug.Break();
@@ -38,8 +40,6 @@ public class PlayerController : MonoBehaviour
                 MoveAccordingToAxis(movementAxis);
             else if (playerMotor.isGrounded == false && movementAxis == 0)
                 MoveAccordingToAxis(lastMovementAxis);
-
-
         }
         if (movementAxis != 1 && movementAxis != -1)
         {
@@ -92,6 +92,11 @@ public class PlayerController : MonoBehaviour
             playerMotor.Jump();
         }
     }
+
+    void OnAttackButton()
+    {
+        playerAttack.Attack();
+    }
     #endregion
 
     public bool CanMove()
@@ -113,6 +118,17 @@ public class PlayerController : MonoBehaviour
     void DebugReload()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    bool DebugAllEnemiesAreDead()
+    {
+        for (int i = 0; i < enemiesDebug.Length; i++)
+        {
+            if (enemiesDebug[i].gameObject.activeSelf == true)
+                return false;
+        }
+
+        return true;
     }
 
     void DebugEnemies()

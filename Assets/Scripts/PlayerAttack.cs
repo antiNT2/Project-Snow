@@ -44,24 +44,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
     private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && attackDelayNotPassed == false && closeEntities.Count > 0)
-        {
-            if (playerMotor.isGrounded)
-                currentAttackState = AttackState.GroundDash;
-            else
-                currentAttackState = AttackState.AirDash;
-
-            hasAttackedWithThisSlash = false;
-            playerRigidbody.velocity = Vector2.zero;
-            playerRigidbody.AddForce(GetForceVectorTowardsClosestEntity() * 95f, ForceMode2D.Impulse);
-            lastAttackForceApplied = GetForceVectorTowardsClosestEntity();
-            CustomFunctions.PlaySound(attackDashSound);
-
-            if (attackDelayCoroutine != null)
-                StopCoroutine(attackDelayCoroutine);
-            attackDelayCoroutine = StartCoroutine(AttackDelay());
-        }
+    {     
         DoDamage();
 
         if (currentAttackState == AttackState.Bounce && playerMotor.isGrounded)
@@ -81,6 +64,27 @@ public class PlayerAttack : MonoBehaviour
         attackDelayNotPassed = false;
     }
 
+    public void Attack()
+    {
+        if (attackDelayNotPassed == false && closeEntities.Count > 0)
+        {
+            if (playerMotor.isGrounded)
+                currentAttackState = AttackState.GroundDash;
+            else
+                currentAttackState = AttackState.AirDash;
+
+            hasAttackedWithThisSlash = false;
+            playerRigidbody.velocity = Vector2.zero;
+            playerRigidbody.AddForce(GetForceVectorTowardsClosestEntity() * 95f, ForceMode2D.Impulse);
+            lastAttackForceApplied = GetForceVectorTowardsClosestEntity();
+            CustomFunctions.PlaySound(attackDashSound);
+
+            if (attackDelayCoroutine != null)
+                StopCoroutine(attackDelayCoroutine);
+            attackDelayCoroutine = StartCoroutine(AttackDelay());
+        }
+    }
+
     void DoDamage()
     {
         if ((currentAttackState == AttackState.GroundDash || currentAttackState == AttackState.AirDash) && hasAttackedWithThisSlash == false)
@@ -96,6 +100,7 @@ public class PlayerAttack : MonoBehaviour
                 playerRigidbody.velocity = Vector2.zero;
                 playerRigidbody.AddForce((GetForceVectorTowardsClosestEntity() + (Vector2.down * 1f)) * -25f, ForceMode2D.Impulse);
                 currentAttackState = AttackState.Bounce;
+                CustomFunctions.VibrateController();
                 playerMotor.airJumpsLeft++;
             }
         }

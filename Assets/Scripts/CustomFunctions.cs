@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Cinemachine;
 
 public class CustomFunctions : MonoBehaviour
@@ -47,6 +48,19 @@ public class CustomFunctions : MonoBehaviour
         audio.clip = soundToPlay;
         audio.Play();
         Destroy(audio, soundToPlay.length + 0.2f);
+    }
+
+    public static void VibrateController()
+    {
+        if (Gamepad.current != null)
+            instance.StartCoroutine(instance.Vibration());
+    }
+
+    public IEnumerator Vibration()
+    {
+        Gamepad.current.SetMotorSpeeds(.4f, .8f);
+        yield return new WaitForSecondsRealtime(0.1f);
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
 }
