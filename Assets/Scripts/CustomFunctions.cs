@@ -8,6 +8,8 @@ public class CustomFunctions : MonoBehaviour
 {
     public static CustomFunctions instance;
     static GameObject soundHolder;
+    [SerializeField]
+    CinemachineVirtualCamera zoomCam;
 
     private void Awake()
     {
@@ -56,11 +58,22 @@ public class CustomFunctions : MonoBehaviour
             instance.StartCoroutine(instance.Vibration());
     }
 
-    public IEnumerator Vibration()
+    IEnumerator Vibration()
     {
         Gamepad.current.SetMotorSpeeds(.4f, .8f);
         yield return new WaitForSecondsRealtime(0.1f);
         Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
+    public static void ZoomCamera(float zoomStayDuration)
+    {
+        instance.StartCoroutine(instance.ApplyZoomCamera(zoomStayDuration));
+    }
+
+    IEnumerator ApplyZoomCamera(float zoomStayDuration)
+    {
+        zoomCam.Priority = 11;
+        yield return new WaitForSecondsRealtime(zoomStayDuration);
+        zoomCam.Priority = 9;
+    }
 }
