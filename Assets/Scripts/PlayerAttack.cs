@@ -101,7 +101,7 @@ public class PlayerAttack : MonoBehaviour
                 playerRigidbody.AddForce((GetForceVectorTowardsClosestEntity() + (Vector2.down * 1f)) * -25f, ForceMode2D.Impulse);
                 currentAttackState = AttackState.Bounce;
                 CustomFunctions.VibrateController();
-                CustomFunctions.ZoomCamera(0.2f);
+                //CustomFunctions.ZoomCamera(0.2f);
                 playerMotor.airJumpsLeft++;
             }
         }
